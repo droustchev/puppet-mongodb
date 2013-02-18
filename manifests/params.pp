@@ -36,7 +36,8 @@ class mongodb::params {
 	# directorypath to store db directory in
 	# subdirectories for each mongo instance will be created
 
-	$dbdir = '/var/lib'
+	#TODO: fix bug in template using default even if custom dbpath specified
+	$dbdir = '/mnt/part3'
 
 	# numbers of files (days) to keep by logrotate
 
