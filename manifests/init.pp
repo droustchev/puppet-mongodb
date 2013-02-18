@@ -33,6 +33,22 @@ class mongodb inherits mongodb::params {
 			require => Anchor['mongodb::install::end'],
 			before => Anchor['mongodb::end'],
 	}
+	
+	group {
+		"mongodb-group":
+		name => "mongodb",
+		ensure => present,
+		require => Service["${::mongodb::params::old_servicename}"],
+	}
+	
+	user {
+		"mongodb-user":
+		name => "mongodb",
+		comment => "MongoDB user",
+		ensure => present,
+		groups => "mongodb",
+		require => Group["mongodb-group"],
+	}
 
 	# remove not wanted startup script, because it would kill all mongod instances
 	# and not only the default mongod
@@ -47,6 +63,8 @@ class mongodb inherits mongodb::params {
 
 	define mongod (
 		$mongod_instance = $name,
+		$mongod_dbpath = undef,
+		$mongod_logpath = undef,
 		$mongod_bind_ip = '',
 		$mongod_port = 27017,
 		$mongod_replSet = '',
